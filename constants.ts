@@ -68,7 +68,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'schoonschip',
-    title: 'Schoon Schip',
+    title: 'Schoonschip',
     client: 'Space&Matter',
     year: '2020',
     role: 'Floating Urbanism',

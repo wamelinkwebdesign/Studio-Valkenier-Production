@@ -67,14 +67,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
       )}
 
       {/* Info Overlay */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-8 bg-gradient-to-t from-white/80 via-white/10 to-transparent opacity-100 transition-all duration-300">
+      <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-8 bg-gradient-to-t from-white/60 via-white/5 to-transparent opacity-100 transition-all duration-300">
         <div className="transform md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300">
-            <h3 className="text-xl md:text-3xl font-bold uppercase tracking-tight text-black mb-2 leading-none">
+            <h3 className="text-xl md:text-3xl font-bold uppercase tracking-tight text-black leading-none">
             {project.title}
             </h3>
-            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[10px] md:text-xs uppercase tracking-widest text-gray-600">
-                <span>{project.client}</span>
-            </div>
         </div>
       </div>
 
