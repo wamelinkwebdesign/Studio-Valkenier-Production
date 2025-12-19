@@ -18,8 +18,8 @@ const Footer: React.FC = () => {
 
         <div className="flex flex-col gap-4 items-start md:items-end">
              <div className="flex space-x-6 text-sm uppercase tracking-widest">
-                <a href="#" className="hover:text-gray-400 transition-colors">Instagram</a>
-                <a href="#" className="hover:text-gray-400 transition-colors">LinkedIn</a>
+                <a href="https://www.instagram.com/studiovalkenier/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Instagram</a>
+                <a href="https://nl.pinterest.com/studiovalkenier/_saved/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Pinterest</a>
              </div>
              <p className="text-xs text-gray-500 uppercase tracking-wider mt-4">
                 © {new Date().getFullYear()} Studio Valkenier. Amsterdam.
