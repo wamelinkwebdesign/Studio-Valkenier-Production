@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Project } from '../types';
-import { Play } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
@@ -15,17 +14,47 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
-    if (videoRef.current && project.videoPreview) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch((e) => console.log('Autoplay blocked', e));
+    // Only enable hover behavior on devices that support hover (desktop)
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setIsHovered(true);
+      if (videoRef.current && project.videoPreview) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch((e) => console.log('Autoplay blocked', e));
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    if (videoRef.current && project.videoPreview) {
-      videoRef.current.pause();
+    // Only disable hover behavior on devices that support hover
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
+      setIsHovered(false);
+      if (videoRef.current && project.videoPreview) {
+        videoRef.current.pause();
+      }
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    // On touch devices (no hover), first click plays video, second click opens project
+    const isTouch = typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches;
+    
+    if (isTouch) {
+        if (!isHovered) {
+            // First tap: Play video
+            e.preventDefault();
+            e.stopPropagation();
+            setIsHovered(true);
+            if (videoRef.current && project.videoPreview) {
+                videoRef.current.currentTime = 0;
+                videoRef.current.play().catch((e) => console.log('Autoplay blocked', e));
+            }
+        } else {
+            // Second tap: Open project
+            onClick(project);
+        }
+    } else {
+        // Desktop: Always open project (hover handles preview)
+        onClick(project);
     }
   };
 
@@ -38,7 +67,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
       transition={{ duration: 0.6, delay: index * 0.1 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={() => onClick(project)}
+      onClick={handleClick}
     >
       {/* Image Thumbnail */}
       <img
@@ -50,7 +79,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
       {/* Video Preview Overlay */}
       {project.videoPreview && (
         <motion.div
-          className="absolute inset-0 w-full h-full z-10 bg-white"
+          className="absolute inset-0 w-full h-full z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0 }}
           transition={{ duration: 0.4 }}
@@ -58,7 +87,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
           <video
             ref={videoRef}
             src={project.videoPreview}
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full object-cover"
             muted
             playsInline
             loop
@@ -66,23 +95,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
         </motion.div>
       )}
 
-      {/* Info Overlay */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-8 bg-gradient-to-t from-white/60 via-white/5 to-transparent opacity-100 transition-all duration-300">
-        <div className="transform md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300">
-            <h3 className="text-xl md:text-3xl font-bold uppercase tracking-tight text-black leading-none">
+      {/* Title Card */}
+      <div className="absolute bottom-0 left-0 z-20 max-w-[85%]">
+        <div className="bg-white inline-block px-5 py-3 shadow-sm transform md:translate-y-2 md:group-hover:translate-y-0 transition-transform duration-300">
+            <h3 className="text-lg md:text-xl font-bold uppercase tracking-tight text-black leading-none">
             {project.title}
             </h3>
         </div>
       </div>
-
-      {/* Play Icon - Mobile Visual Cue (Only if video exists) */}
-      {project.videoPreview && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden z-20">
-            <div className="w-12 h-12 bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-black/20">
-               <Play className="w-5 h-5 text-black fill-black" />
-            </div>
-        </div>
-      )}
     </motion.div>
   );
 };
