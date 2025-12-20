@@ -54,6 +54,12 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     setCurrentMediaIndex((prev) => (prev !== null ? (prev - 1 + allMedia.length) % allMedia.length : null));
   }, [currentMediaIndex, allMedia.length]);
 
+  // Swipe Logic
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
   // Keyboard navigation
   useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -134,7 +140,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                 {/* Mobile Header (Title + Back) */}
                 <div className="md:hidden p-6 pt-8 pb-0 flex flex-col gap-6">
                     <button onClick={onClose} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
-                        <ArrowLeft size={14} /> Back
+                        <ArrowLeft size={14} /> Terug
                     </button>
                     <h1 className="text-5xl font-black uppercase tracking-tighter leading-[0.9]">
                         {project.title}
@@ -184,7 +190,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                     </div>
 
                     {/* Image Stream Grid - Start from index 1 since 0 is Hero */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-y-24 gap-x-8 px-6 md:px-12 pb-24 md:pb-32">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-y-24 gap-x-8 px-6 md:px-12 pb-12 md:pb-32">
                         {allMedia.slice(1).map((media, relativeIdx) => {
                              // Correct global index is relativeIdx + 1
                              const globalIndex = relativeIdx + 1;
@@ -233,6 +239,17 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                              )
                         })}
                     </div>
+
+                    {/* Mobile Bottom Back Link */}
+                    <div className="md:hidden w-full flex flex-col items-center justify-center pb-24 pt-4">
+                        <button 
+                            onClick={onClose}
+                            className="group relative flex items-center gap-3 text-sm font-bold uppercase tracking-widest hover:text-studio-red transition-colors"
+                        >
+                            <ArrowLeft size={16} />
+                            Terug
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -280,10 +297,23 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                     <motion.div 
                         key={currentMediaIndex}
                         initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="w-full h-full flex items-center justify-center"
+                        className="relative max-w-full max-h-full flex items-center justify-center touch-none"
+                        onClick={(e) => e.stopPropagation()} // Stop click bubbling to avoid closing when tapping image
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={1}
+                        onDragEnd={(e, { offset, velocity }) => {
+                            const swipe = swipePower(offset.x, velocity.x);
+
+                            if (swipe < -swipeConfidenceThreshold) {
+                                nextMedia();
+                            } else if (swipe > swipeConfidenceThreshold) {
+                                prevMedia();
+                            }
+                        }}
                     >
                          {allMedia[currentMediaIndex].type === 'video' ? (
                             <video 
@@ -292,14 +322,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                                 controls 
                                 autoPlay 
                                 playsInline
-                                onClick={(e) => e.stopPropagation()}
                             />
                         ) : (
                             <img 
                                 src={allMedia[currentMediaIndex].src} 
-                                className="max-w-full max-h-full object-contain shadow-2xl" 
+                                className="max-w-full max-h-full object-contain shadow-2xl select-none" 
                                 alt="Fullscreen view" 
-                                onClick={(e) => e.stopPropagation()}
+                                draggable={false}
                             />
                         )}
                     </motion.div>
@@ -310,10 +339,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-black/50 font-mono text-sm tracking-widest">
                 {currentMediaIndex + 1} / {allMedia.length}
             </div>
-
-            {/* Mobile Touch Areas (Invisible) */}
-            <div className="md:hidden absolute left-0 top-0 bottom-0 w-1/4 z-40" onClick={prevMedia} />
-            <div className="md:hidden absolute right-0 top-0 bottom-0 w-1/4 z-40" onClick={nextMedia} />
 
         </motion.div>
       )}
