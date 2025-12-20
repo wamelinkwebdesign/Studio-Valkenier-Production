@@ -275,7 +275,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
             </button>
 
             {/* Content Area */}
-            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-24" onClick={(e) => e.stopPropagation()}> 
+            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-24"> 
                 <AnimatePresence mode="wait">
                     <motion.div 
                         key={currentMediaIndex}
@@ -292,12 +292,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                                 controls 
                                 autoPlay 
                                 playsInline
+                                onClick={(e) => e.stopPropagation()}
                             />
                         ) : (
                             <img 
                                 src={allMedia[currentMediaIndex].src} 
                                 className="max-w-full max-h-full object-contain shadow-2xl" 
                                 alt="Fullscreen view" 
+                                onClick={(e) => e.stopPropagation()}
                             />
                         )}
                     </motion.div>

@@ -47,7 +47,7 @@ const CustomCursor: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-6 h-6 bg-white rounded-full pointer-events-none mix-blend-difference z-[9999] flex items-center justify-center"
+      className="fixed top-0 left-0 w-6 h-6 bg-white rounded-full pointer-events-none mix-blend-difference z-[9999] hidden md:flex items-center justify-center"
       style={{ x, y }}
       animate={{
         scale: cursorText ? 5 : (isHovered ? 4 : 1),

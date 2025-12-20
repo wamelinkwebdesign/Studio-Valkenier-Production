@@ -35,12 +35,6 @@
         background-color: #ffffff;
         color: #050505;
         overflow-x: hidden;
-        cursor: none; /* Hide default cursor */
-      }
-      
-      /* Enforce no cursor on interactive elements */
-      a, button, input, select, textarea, [role="button"] {
-        cursor: none !important;
       }
       
       /* Hide scrollbar for Chrome, Safari and Opera */
@@ -51,6 +45,18 @@
       .no-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
+      }
+
+      /* Only hide cursor on desktop/larger screens where custom cursor is visible */
+      @media (min-width: 768px) {
+        body {
+          cursor: none; /* Hide default cursor */
+        }
+        
+        /* Enforce no cursor on interactive elements */
+        a, button, input, select, textarea, [role="button"] {
+          cursor: none !important;
+        }
       }
     </style>
   <script type="importmap">
