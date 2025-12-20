@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Project } from '../types';
 
 interface ProjectModalProps {
@@ -8,17 +8,30 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
-const MetaRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="flex items-center justify-between py-3 border-b border-black/10 last:border-0 font-mono text-xs uppercase tracking-wider">
-    <span className="text-gray-500">{label}</span>
-    <span className="text-black">{value}</span>
-  </div>
-);
-
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+  const [currentMediaIndex, setCurrentMediaIndex] = useState<number | null>(null);
+
+  // Construct unified media list for carousel
+  const allMedia = useMemo(() => {
+    if (!project) return [];
+    const media: { type: 'video' | 'image', src: string }[] = [];
+    
+    // If there is a full video, it goes first
+    if (project.videoFull) {
+        media.push({ type: 'video', src: project.videoFull });
+    }
+
+    // Add all images
+    if (project.images) {
+        project.images.forEach(img => media.push({ type: 'image', src: img }));
+    }
+
+    return media;
+  }, [project]);
+
   // Lock body scroll when modal is open
   useEffect(() => {
-    if (project) {
+    if (project || currentMediaIndex !== null) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -26,7 +39,35 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [project]);
+  }, [project, currentMediaIndex]);
+
+  // Carousel Navigation Handlers
+  const nextMedia = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (currentMediaIndex === null) return;
+    setCurrentMediaIndex((prev) => (prev !== null ? (prev + 1) % allMedia.length : null));
+  }, [currentMediaIndex, allMedia.length]);
+
+  const prevMedia = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (currentMediaIndex === null) return;
+    setCurrentMediaIndex((prev) => (prev !== null ? (prev - 1 + allMedia.length) % allMedia.length : null));
+  }, [currentMediaIndex, allMedia.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+          if (currentMediaIndex !== null) {
+              if (e.key === 'ArrowRight') nextMedia();
+              if (e.key === 'ArrowLeft') prevMedia();
+              if (e.key === 'Escape') setCurrentMediaIndex(null);
+          } else if (project && e.key === 'Escape') {
+              onClose();
+          }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentMediaIndex, project, onClose, nextMedia, prevMedia]);
 
   // Simple parser to handle bold text marked with **text**
   const renderDescription = (text: string) => {
@@ -45,6 +86,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
   return (
     <AnimatePresence>
       <motion.div
+        key="modal-content"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -73,17 +115,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                         >
                             {project.title}
                         </motion.h1>
-
-                        <motion.div 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                            className="flex flex-col border-t border-black mb-12"
-                        >
-                            <MetaRow label="Klant" value={project.client} />
-                            <MetaRow label="Jaar" value={project.year} />
-                            {/* Role removed */}
-                        </motion.div>
 
                         <motion.p 
                             initial={{ y: 20, opacity: 0 }}
@@ -114,50 +145,56 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                 <div className="flex flex-col w-full">
                     
                     {/* HERO MEDIA - Full bleed on top */}
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="w-full aspect-video md:aspect-auto md:h-auto object-cover md:mb-12 mt-8 md:mt-0"
-                    >
-                         {project.videoFull ? (
-                             <video 
-                                src={project.videoFull} 
-                                className="w-full h-full object-cover" 
-                                autoPlay 
-                                muted 
-                                loop 
-                                playsInline 
-                             />
-                         ) : (
-                             <img 
-                                src={project.images?.[0] || project.thumbnail} 
-                                className="w-full h-full object-cover" 
-                                alt={project.title}
-                             />
-                         )}
-                    </motion.div>
+                    {allMedia.length > 0 && (
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            role="button"
+                            className="w-full aspect-video md:aspect-auto md:h-auto object-cover md:mb-12 mt-8 md:mt-0 group relative"
+                            onClick={() => setCurrentMediaIndex(0)}
+                            data-cursor-text="BEKIJKEN"
+                        >
+                             {allMedia[0].type === 'video' ? (
+                                 <video 
+                                    src={allMedia[0].src} 
+                                    className="w-full h-full object-cover" 
+                                    autoPlay 
+                                    muted 
+                                    loop 
+                                    playsInline 
+                                 />
+                             ) : (
+                                 <img 
+                                    src={allMedia[0].src} 
+                                    className="w-full h-full object-cover" 
+                                    alt={project.title}
+                                 />
+                             )}
+                             {/* Hover indication */}
+                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                        </motion.div>
+                    )}
 
                     {/* Mobile Metadata & Description */}
                     <div className="md:hidden px-6 my-12">
-                        <div className="flex flex-col border-t border-b border-black/10 mb-8">
-                            <MetaRow label="Klant" value={project.client} />
-                            <MetaRow label="Jaar" value={project.year} />
-                        </div>
                         <p className="text-base text-black leading-relaxed whitespace-pre-wrap">
                            {renderDescription(project.description)}
                         </p>
                     </div>
 
-                    {/* Image Stream Grid */}
+                    {/* Image Stream Grid - Start from index 1 since 0 is Hero */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-y-24 gap-x-8 px-6 md:px-12 pb-24 md:pb-32">
-                        {project.images?.slice(project.videoFull ? 0 : 1).map((img, idx) => {
-                             // Pattern Logic:
+                        {allMedia.slice(1).map((media, relativeIdx) => {
+                             // Correct global index is relativeIdx + 1
+                             const globalIndex = relativeIdx + 1;
+
+                             // Pattern Logic based on relative index to maintain layout
                              // 0: Full Width
                              // 1: Side by side (Left)
                              // 2: Side by side (Right)
                              // 3: Full Width Portrait
-                             const patternIndex = idx % 4;
+                             const patternIndex = relativeIdx % 4;
                              let spanClass = "md:col-span-2"; // Default Full
                              let aspectClass = "";
 
@@ -174,14 +211,24 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                              
                              return (
                                  <motion.div 
-                                    key={idx} 
+                                    key={globalIndex} 
                                     initial={{ y: 50, opacity: 0 }}
                                     whileInView={{ y: 0, opacity: 1 }}
                                     viewport={{ once: true, margin: "-5%" }}
                                     transition={{ duration: 0.6 }}
-                                    className={`w-full ${spanClass}`}
+                                    role="button"
+                                    className={`w-full ${spanClass} group`}
+                                    onClick={() => setCurrentMediaIndex(globalIndex)}
+                                    data-cursor-text="BEKIJKEN"
                                  >
-                                     <img src={img} className={`w-full ${aspectClass}`} alt="" loading="lazy" />
+                                     <div className="relative overflow-hidden w-full h-full">
+                                        {media.type === 'video' ? (
+                                             <video src={media.src} className={`w-full ${aspectClass} transition-transform duration-700 group-hover:scale-[1.02]`} muted loop playsInline />
+                                        ) : (
+                                             <img src={media.src} className={`w-full ${aspectClass} transition-transform duration-700 group-hover:scale-[1.02]`} alt="" loading="lazy" />
+                                        )}
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
+                                     </div>
                                  </motion.div>
                              )
                         })}
@@ -191,6 +238,83 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
 
         </div>
       </motion.div>
+
+      {/* Fullscreen Carousel Overlay */}
+      {currentMediaIndex !== null && (
+        <motion.div
+            key="fullscreen-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[200] bg-white flex items-center justify-center"
+            onClick={() => setCurrentMediaIndex(null)} // Close on background click
+        >
+            {/* Close Button */}
+            <button 
+                onClick={(e) => { e.stopPropagation(); setCurrentMediaIndex(null); }}
+                className="absolute top-6 right-6 text-black hover:text-studio-red transition-colors z-50 p-4 hover:rotate-90 duration-300"
+            >
+                <X size={40} strokeWidth={1.5} />
+            </button>
+            
+            {/* Previous Button */}
+            <button
+                onClick={prevMedia}
+                className="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 text-black/30 hover:text-black z-50 p-4 transition-colors hidden md:block"
+            >
+                <ChevronLeft size={64} strokeWidth={1} />
+            </button>
+
+            {/* Next Button */}
+            <button
+                onClick={nextMedia}
+                className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 text-black/30 hover:text-black z-50 p-4 transition-colors hidden md:block"
+            >
+                <ChevronRight size={64} strokeWidth={1} />
+            </button>
+
+            {/* Content Area */}
+            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-24" onClick={(e) => e.stopPropagation()}> 
+                <AnimatePresence mode="wait">
+                    <motion.div 
+                        key={currentMediaIndex}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="w-full h-full flex items-center justify-center"
+                    >
+                         {allMedia[currentMediaIndex].type === 'video' ? (
+                            <video 
+                                src={allMedia[currentMediaIndex].src} 
+                                className="max-w-full max-h-full object-contain shadow-2xl" 
+                                controls 
+                                autoPlay 
+                                playsInline
+                            />
+                        ) : (
+                            <img 
+                                src={allMedia[currentMediaIndex].src} 
+                                className="max-w-full max-h-full object-contain shadow-2xl" 
+                                alt="Fullscreen view" 
+                            />
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* Counter */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-black/50 font-mono text-sm tracking-widest">
+                {currentMediaIndex + 1} / {allMedia.length}
+            </div>
+
+            {/* Mobile Touch Areas (Invisible) */}
+            <div className="md:hidden absolute left-0 top-0 bottom-0 w-1/4 z-40" onClick={prevMedia} />
+            <div className="md:hidden absolute right-0 top-0 bottom-0 w-1/4 z-40" onClick={nextMedia} />
+
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };

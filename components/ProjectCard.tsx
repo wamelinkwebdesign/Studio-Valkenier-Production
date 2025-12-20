@@ -68,6 +68,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, index, clas
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      data-cursor-text="BEKIJKEN"
     >
       {/* Image Thumbnail */}
       <img
