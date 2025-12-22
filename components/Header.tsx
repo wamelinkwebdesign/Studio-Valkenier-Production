@@ -80,8 +80,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
     },
     { 
       label: 'Contact', 
-      href: 'mailto:info@studiovalkenier.nl',
-      onClick: () => setIsMobileMenuOpen(false)
+      href: '#contact',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsMobileMenuOpen(false);
+        const element = document.getElementById('contact');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     }
   ];
 

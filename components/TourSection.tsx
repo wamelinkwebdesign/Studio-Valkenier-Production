@@ -81,6 +81,7 @@ const TourSection: React.FC = () => {
 
   return (
     <section 
+      id="contact"
       className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white text-black cursor-default"
     >
       {/* Main Content Grid */}

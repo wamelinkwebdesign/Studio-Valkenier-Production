@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer id="contact" className="w-full py-32 px-6 md:px-12 bg-white text-black">
+    <footer className="w-full py-32 px-6 md:px-12 bg-white text-black">
       <div className="flex flex-col md:flex-row justify-between items-end gap-12">
         
         <div className="flex flex-col gap-8 w-full md:w-1/2">
