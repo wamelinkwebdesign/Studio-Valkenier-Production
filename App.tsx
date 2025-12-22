@@ -44,9 +44,8 @@ const App: React.FC = () => {
         <Hero />
         
         <section id="work" className="w-full px-4 py-24 md:px-12 md:py-32">
-          <div className="mb-16 md:mb-24 flex items-end justify-between border-b border-black/10 pb-8">
+          <div className="mb-16 md:mb-24 flex items-end justify-between">
              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Projecten</h2>
-             <span className="hidden md:block text-sm font-mono text-gray-500">(2011 — 2024)</span>
           </div>
 
           {/* Mosaic Grid Container */}

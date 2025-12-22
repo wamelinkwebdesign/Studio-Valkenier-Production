@@ -58,10 +58,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
 
   const navLinks = [
     { 
-      label: 'Work', 
+      label: 'Projecten', 
       href: '#work',
       onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
         setIsMobileMenuOpen(false);
+        const element = document.getElementById('work');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     },
     { 

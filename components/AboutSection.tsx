@@ -28,7 +28,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onOpenManifesto }) => {
   };
 
   return (
-    <section id="about" className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white border-t border-black/5 text-black overflow-hidden">
+    <section id="about" className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white text-black overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial="hidden"

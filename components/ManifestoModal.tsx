@@ -79,13 +79,9 @@ const ManifestoModal: React.FC<ManifestoModalProps> = ({ isOpen, onClose }) => {
               {/* Section 1: The Foundation */}
               <motion.section variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
                 <div className="space-y-8 order-2 md:order-1">
-                  <span className="block text-xs font-mono text-studio-red uppercase tracking-[0.2em] mb-4">
-                    01 — De Fundering
-                  </span>
                   <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black uppercase tracking-tighter leading-[0.9]">
                     Multidisciplinair<br />& Circulair
                   </h2>
-                  <div className="w-full h-[1px] bg-black/10" />
                   <p className="text-lg md:text-xl text-gray-600 font-light leading-relaxed">
                     Studio Valkenier is een multidisciplinair ontwerpbureau dat zich breed beweegt binnen stedelijk ontwerp, architectuur, interieurontwerp en conceptontwikkeling. Het verlengen van de levensduur van gebouwen en het verkleinen van de ecologische voetafdruk vormen de basis.
                   </p>
@@ -118,13 +114,9 @@ const ManifestoModal: React.FC<ManifestoModalProps> = ({ isOpen, onClose }) => {
                     />
                 </div>
                 <div className="space-y-8 order-2">
-                  <span className="block text-xs font-mono text-studio-red uppercase tracking-[0.2em] mb-4">
-                    02 — De Methode
-                  </span>
                   <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black uppercase tracking-tighter leading-[0.9]">
                     Co-creatie
                   </h2>
-                  <div className="w-full h-[1px] bg-black/10" />
                   <div className="flex flex-col gap-8">
                       <p className="text-lg md:text-xl text-gray-600 font-light leading-relaxed">
                       Wij geloven dat ontwerpen worden verrijkt door samenwerking. Door een multidisciplinair team samen te stellen, kunnen we een gelaagd ontwerp creëren waarbij het geheel meer is dan de som der delen.
@@ -139,13 +131,9 @@ const ManifestoModal: React.FC<ManifestoModalProps> = ({ isOpen, onClose }) => {
               {/* Section 3: The Specialty */}
               <motion.section variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
                 <div className="space-y-8 order-2 md:order-1">
-                  <span className="block text-xs font-mono text-studio-red uppercase tracking-[0.2em] mb-4">
-                    03 — De Specialiteit
-                  </span>
                   <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black uppercase tracking-tighter leading-[0.9]">
                     Verloren<br />Ruimtes
                   </h2>
-                  <div className="w-full h-[1px] bg-black/10" />
                   <p className="text-lg md:text-xl text-gray-600 font-light leading-relaxed">
                     Gespecialiseerd in het creëren van kansen voor verloren ruimtes, in de stad en op het platteland. We experimenteren graag met ideeën en hebben de kracht om experimenten daadwerkelijk te realiseren.
                   </p>

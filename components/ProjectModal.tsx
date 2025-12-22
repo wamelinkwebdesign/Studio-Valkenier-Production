@@ -159,7 +159,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                             role="button"
                             className="w-full aspect-video md:aspect-auto md:h-auto object-cover md:mb-12 mt-8 md:mt-0 group relative"
                             onClick={() => setCurrentMediaIndex(0)}
-                            data-cursor-text="BEKIJKEN"
                         >
                              {allMedia[0].type === 'video' ? (
                                  <video 
@@ -225,7 +224,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                                     role="button"
                                     className={`w-full ${spanClass} group`}
                                     onClick={() => setCurrentMediaIndex(globalIndex)}
-                                    data-cursor-text="BEKIJKEN"
                                  >
                                      <div className="relative overflow-hidden w-full h-full">
                                         {media.type === 'video' ? (

@@ -29,8 +29,8 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'hannekes',
-    title: "Hanneke's Boom",
-    client: "Hanneke's Boom",
+    title: "Hannekes Boom",
+    client: "Hannekes Boom",
     year: '2011',
     role: 'Spatial Design',
     thumbnail: 'https://storage.googleapis.com/studiovalkenier/hannekesboom/20210610-Valkenier-9103_wp_1600.jpg',

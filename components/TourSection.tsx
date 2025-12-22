@@ -81,7 +81,7 @@ const TourSection: React.FC = () => {
 
   return (
     <section 
-      className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white text-black border-t border-black cursor-default"
+      className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white text-black cursor-default"
     >
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-8 max-w-[1800px] mx-auto">
@@ -90,9 +90,7 @@ const TourSection: React.FC = () => {
         <div className="flex flex-col h-full justify-between">
             <div className="mb-16">
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8">
-                    Meer <br/>Weten 
-                    <span className="block font-serif italic text-6xl md:text-8xl lg:text-9xl text-studio-red my-2">&</span>
-                    Een Tour <br/>Boeken
+                    Contact
                 </h2>
                 <p className="text-lg md:text-xl font-medium leading-relaxed max-w-md mt-12">
                    Wil je dieper de verhalen induiken? Elk project draagt een geschiedenis van gemeenschap, ontwerp en experiment.
