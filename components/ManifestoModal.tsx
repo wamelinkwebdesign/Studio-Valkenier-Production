@@ -55,6 +55,16 @@ const ManifestoModal: React.FC<ManifestoModalProps> = ({ isOpen, onClose }) => {
 
   const tags = ["Circulariteit", "Sociale Impact", "Hergebruik", "Niet-toxisch"];
 
+  const handleContactClick = () => {
+    onClose();
+    setTimeout(() => {
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -150,13 +160,13 @@ const ManifestoModal: React.FC<ManifestoModalProps> = ({ isOpen, onClose }) => {
 
               {/* Footer CTA & Back Button */}
               <motion.div variants={itemVariants} className="pt-12 pb-24 flex flex-col items-center gap-12">
-                <a 
-                  href="mailto:info@studiovalkenier.nl"
-                  className="group relative inline-flex items-center gap-4 px-8 py-4 bg-black text-white font-bold uppercase tracking-widest text-sm hover:bg-studio-red transition-all duration-300"
+                <button 
+                  onClick={handleContactClick}
+                  className="group relative inline-flex items-center gap-4 px-8 py-4 bg-black text-white font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition-all duration-300"
                 >
-                  Start een project
+                  Contact
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+                </button>
 
                 {/* Back Link */}
                 <button 

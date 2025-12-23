@@ -8,12 +8,12 @@ interface ServiceColumnProps {
   title: string;
   description: string;
   ctaLabel: string;
-  ctaLink?: string;
+  onClick: () => void;
   videoUrl?: string;
   className?: string;
 }
 
-const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, ctaLabel, ctaLink = "mailto:info@studiovalkenier.nl", videoUrl, className = "" }) => {
+const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, ctaLabel, onClick, videoUrl, className = "" }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -61,13 +61,13 @@ const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, descriptio
         </div>
 
         <div>
-           <a 
-             href={ctaLink}
+           <button 
+             onClick={onClick}
              className={`group inline-flex items-center gap-2 text-xl md:text-2xl font-black uppercase tracking-tighter border-b-2 pb-1 transition-all duration-300 ${isHovered ? 'border-white text-white' : 'border-black text-black hover:text-studio-red hover:border-studio-red'}`}
            >
              {ctaLabel}
              <ArrowUpRight className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-           </a>
+           </button>
         </div>
       </div>
     </div>
@@ -144,7 +144,11 @@ const LocationBlock: React.FC<LocationBlockProps> = ({ label, addressLines, note
   );
 };
 
-const TourSection: React.FC = () => {
+interface TourSectionProps {
+  onOpenBooking: (type: 'tour' | 'lecture') => void;
+}
+
+const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
   // Find video assets for previews
   const toursVideo = PROJECTS.find(p => p.id === 'hannekes')?.videoPreview; 
   const lecturesVideo = PROJECTS.find(p => p.id === 'schoonschip')?.videoPreview; // Schoonschip shows innovation
@@ -191,7 +195,8 @@ const TourSection: React.FC = () => {
             number="01"
             title="Tours"
             description="Studio Valkenier biedt persoonlijke rondleidingen onder leiding van initiatiefnemers, waarbij je een uniek kijkje achter de schermen krijgt: van eerste schets tot gerealiseerde plek."
-            ctaLabel="Meer informatie"
+            ctaLabel="Boek een tour"
+            onClick={() => onOpenBooking('tour')}
             videoUrl={toursVideo}
         />
 
@@ -201,6 +206,7 @@ const TourSection: React.FC = () => {
             title="Lezingen"
             description="De partners van Studio Valkenier zijn tevens ervaren keynote speakers. Voor lezingen of samenwerkingen delen zij graag hun visie op duurzaam ontwerp, circulair leven en rebelse architectuur."
             ctaLabel="Boek een lezing"
+            onClick={() => onOpenBooking('lecture')}
             videoUrl={lecturesVideo}
         />
 

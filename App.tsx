@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import ProjectCard from './components/ProjectCard';
 import ProjectModal from './components/ProjectModal';
 import ManifestoModal from './components/ManifestoModal';
+import BookingModal from './components/BookingModal';
 import AboutSection from './components/AboutSection';
 import TourSection from './components/TourSection';
 import Footer from './components/Footer';
@@ -14,6 +15,15 @@ import { Project } from './types';
 const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isManifestoOpen, setIsManifestoOpen] = useState(false);
+  
+  // Booking Modal State
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [bookingType, setBookingType] = useState<'tour' | 'lecture'>('tour');
+
+  const handleOpenBooking = (type: 'tour' | 'lecture') => {
+    setBookingType(type);
+    setIsBookingOpen(true);
+  };
 
   // Mosaic Pattern Logic for 4-column grid
   const getMosaicClass = (index: number) => {
@@ -63,13 +73,18 @@ const App: React.FC = () => {
         </section>
 
         <AboutSection onOpenManifesto={() => setIsManifestoOpen(true)} />
-        <TourSection />
+        <TourSection onOpenBooking={handleOpenBooking} />
 
       </main>
 
       <Footer />
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
       <ManifestoModal isOpen={isManifestoOpen} onClose={() => setIsManifestoOpen(false)} />
+      <BookingModal 
+        isOpen={isBookingOpen} 
+        onClose={() => setIsBookingOpen(false)} 
+        initialType={bookingType}
+      />
     </div>
   );
 };
