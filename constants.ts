@@ -92,6 +92,8 @@ export const PROJECTS: Project[] = [
     year: '2016',
     role: 'Circular Architecture',
     thumbnail: 'https://storage.googleapis.com/studiovalkenier/tuinvanbret/01%20sv_cultuurtafel%20(8)_1.JPG',
+    videoPreview: 'https://storage.googleapis.com/studiovalkenier/tuinvanbret/TuinvanBret.mp4',
+    videoFull: 'https://storage.googleapis.com/studiovalkenier/tuinvanbret/TuinvanBret.mp4',
     description: 'Met zijn opvallende rode verschijning heeft BRET Sloterdijk getransformeerd van een grijs kantorengebied tot een bruisende culturele hotspot. Omgeven door groen is het een plek om te eten, drinken, dansen en verbinden. Architectonisch uitgesproken en sociaal levendig klopt BRET als een rood hart in het zakelijke deel van de stad.\n\nNaast BRET ligt de Tuin van BRET: een gedeelde tuin en werkplek, opgezet door ondernemers met een gezamenlijke visie op duurzaamheid en gemeenschap. Ontworpen rondom hergebruik en circulariteit vormt het een voorbeeld van een nieuwe economie, gedreven door passie in plaats van winst.',
     images: [
       'https://storage.googleapis.com/studiovalkenier/tuinvanbret/01%20sv_cultuurtafel%20(8)_1.JPG',

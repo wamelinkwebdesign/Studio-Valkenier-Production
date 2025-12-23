@@ -74,6 +74,76 @@ const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, descriptio
   );
 };
 
+interface LocationBlockProps {
+  label: string;
+  addressLines: string[];
+  note?: string;
+  image: string;
+  mapQuery: string;
+}
+
+const LocationBlock: React.FC<LocationBlockProps> = ({ label, addressLines, note, image, mapQuery }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative w-full py-8 border-t border-black transition-colors duration-500 overflow-hidden group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Background Image Layer */}
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 z-0"
+          >
+            <div className="absolute inset-0 bg-black/40 z-10" />
+            <img 
+              src={image} 
+              alt={label}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Content */}
+      <div className={`relative z-20 transition-colors duration-300 ${isHovered ? 'text-white' : 'text-black'}`}>
+          <div className="flex justify-between items-start mb-4">
+            <span className={`text-xs font-mono uppercase tracking-[0.2em] ${isHovered ? 'text-white' : 'text-gray-500'}`}>
+                {label}
+            </span>
+          </div>
+          
+          <div className="text-xl font-bold uppercase tracking-tight leading-tight mb-6">
+              {addressLines.map((line, i) => (
+                  <span key={i} className="block">{line}</span>
+              ))}
+              {note && (
+                  <span className="block text-sm font-normal normal-case mt-2 italic opacity-80">
+                      {note}
+                  </span>
+              )}
+          </div>
+
+          <a 
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={`inline-flex items-center text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 ${isHovered ? 'border-white hover:text-white hover:border-white' : 'border-black hover:text-studio-red hover:border-studio-red'}`}
+          >
+              <span>Locatie Bekijken</span>
+              <ArrowUpRight className="ml-2 w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+          </a>
+      </div>
+    </div>
+  );
+};
+
 const TourSection: React.FC = () => {
   // Find video assets for previews
   const toursVideo = PROJECTS.find(p => p.id === 'hannekes')?.videoPreview; 
@@ -98,24 +168,21 @@ const TourSection: React.FC = () => {
                 </p>
             </div>
 
-            {/* Field Office Block (Integrated into grid) */}
-            <div className="flex flex-col items-start mt-auto">
-                <span className="text-xs font-mono text-studio-red uppercase tracking-[0.2em] mb-4">
-                    Field Office
-                </span>
-                <p className="text-xl font-bold uppercase tracking-tight leading-tight mb-8">
-                    Kastrupstraat 11g<br/>
-                    1043 CR Amsterdam
-                </p>
-                <a 
-                   href="https://www.google.com/maps/search/?api=1&query=Studio+Valkenier+Amsterdam"
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   className="group relative inline-flex items-center justify-center bg-black text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-studio-red transition-colors duration-300"
-                >
-                    <span>Locatie Bekijken</span>
-                    <ArrowUpRight className="ml-2 w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-                </a>
+            {/* Location Blocks */}
+            <div className="flex flex-col w-full mt-auto">
+                <LocationBlock 
+                    label="Amsterdam Studio"
+                    addressLines={["Kastrupstraat 11G", "1043 CR Amsterdam"]}
+                    image="https://storage.googleapis.com/studiovalkenier/studio.JPG"
+                    mapQuery="Studio Valkenier Kastrupstraat 11G Amsterdam"
+                />
+                <LocationBlock 
+                    label="Field Office"
+                    addressLines={["Landgoed Rorik", "Pad van Altruda 3", "1948 PT Beverwijk"]}
+                    note="Stevige schoenen aan."
+                    image="https://storage.googleapis.com/studiovalkenier/field%20office.jpg"
+                    mapQuery="Pad van Altruda 3 Beverwijk"
+                />
             </div>
         </div>
 
