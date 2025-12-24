@@ -95,7 +95,8 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
     'schoonschip-archnl',
     'schoonschip-houtblad',
     'sloterdijk-plan-ams',
-    'stadstimmertuin-archnl'
+    'stadstimmertuin-archnl',
+    'verticale-tuin'
   ];
   const isTwoColumnLayout = gridLayoutIds.includes(story.id);
 

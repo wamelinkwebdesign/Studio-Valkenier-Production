@@ -20,9 +20,14 @@ const Footer: React.FC = () => {
              <div className="flex space-x-6 text-sm uppercase tracking-widest">
                 <a href="https://www.instagram.com/studiovalkenier/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Instagram</a>
              </div>
-             <p className="text-xs text-gray-500 uppercase tracking-wider mt-4">
-                © {new Date().getFullYear()} Studio Valkenier. Amsterdam.
-             </p>
+             <div className="mt-4 flex flex-col items-start md:items-end gap-1">
+                 <p className="text-xs text-gray-500 uppercase tracking-wider">
+                    © {new Date().getFullYear()} Studio Valkenier - Amsterdam
+                 </p><br />
+                 <p className="text-xs text-gray-500 uppercase tracking-wider">
+                    Website door <a href="https://wamelinkwebdesign.nl" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">Wamelink Webdesign</a>
+                 </p>
+             </div>
         </div>
       </div>
     </footer>

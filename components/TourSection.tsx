@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDown } from 'lucide-react';
 import { PROJECTS } from '../constants';
 
 interface ServiceColumnProps {
@@ -11,9 +11,11 @@ interface ServiceColumnProps {
   onClick: () => void;
   videoUrl?: string;
   className?: string;
+  pdfUrl?: string;
+  pdfLabel?: string;
 }
 
-const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, ctaLabel, onClick, videoUrl, className = "" }) => {
+const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, ctaLabel, onClick, videoUrl, className = "", pdfUrl, pdfLabel }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -60,7 +62,7 @@ const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, descriptio
            </p>
         </div>
 
-        <div>
+        <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
            <button 
              onClick={onClick}
              className={`group inline-flex items-center gap-2 text-xl md:text-2xl font-black uppercase tracking-tighter border-b-2 pb-1 transition-all duration-300 ${isHovered ? 'border-white text-white' : 'border-black text-black hover:text-studio-red hover:border-studio-red'}`}
@@ -68,6 +70,23 @@ const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, descriptio
              {ctaLabel}
              <ArrowUpRight className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
            </button>
+
+           {pdfUrl && (
+             <>
+                {/* Separator - Hidden on mobile where they stack */}
+                <span className={`hidden md:block w-px h-6 ${isHovered ? 'bg-white/30' : 'bg-black/20'}`}></span>
+                
+                <a 
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group/pdf inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 ${isHovered ? 'border-white/50 text-white/80 hover:text-white hover:border-white' : 'border-black/30 text-black/50 hover:text-black hover:border-black'}`}
+                >
+                    {pdfLabel || "Download PDF"}
+                    <ArrowDown className="w-3 h-3 group-hover/pdf:translate-y-1 transition-transform" />
+                </a>
+             </>
+           )}
         </div>
       </div>
     </div>
@@ -198,6 +217,8 @@ const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
             ctaLabel="Boek een tour"
             onClick={() => onOpenBooking('tour')}
             videoUrl={toursVideo}
+            pdfUrl="https://storage.googleapis.com/studiovalkenier/07Informatiewaaier_90x160mmsv.pdf"
+            pdfLabel="Informatie Downloaden"
         />
 
         {/* COLUMN 3: Lectures */}
