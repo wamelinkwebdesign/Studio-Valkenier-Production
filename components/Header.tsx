@@ -70,6 +70,18 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
       }
     },
     { 
+      label: 'Stories', 
+      href: '#stories',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsMobileMenuOpen(false);
+        const element = document.getElementById('stories');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    },
+    { 
       label: 'About', 
       href: '#', 
       onClick: (e: React.MouseEvent) => {

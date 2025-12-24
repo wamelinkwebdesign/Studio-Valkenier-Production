@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X, ArrowRight, Check } from 'lucide-react';
 
 interface BookingModalProps {
@@ -42,12 +42,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, initialTyp
     setIsSuccess(true);
   };
 
-  const backdropVariants = {
+  const backdropVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 }
   };
 
-  const modalVariants = {
+  const modalVariants: Variants = {
     hidden: { x: '100%' },
     visible: { 
       x: 0,

@@ -7,13 +7,16 @@ import ManifestoModal from './components/ManifestoModal';
 import BookingModal from './components/BookingModal';
 import AboutSection from './components/AboutSection';
 import TourSection from './components/TourSection';
+import StoriesSection from './components/StoriesSection';
+import StoryModal from './components/StoryModal';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import { PROJECTS } from './constants';
-import { Project } from './types';
+import { Project, Story } from './types';
 
 const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isManifestoOpen, setIsManifestoOpen] = useState(false);
   
   // Booking Modal State
@@ -23,6 +26,16 @@ const App: React.FC = () => {
   const handleOpenBooking = (type: 'tour' | 'lecture') => {
     setBookingType(type);
     setIsBookingOpen(true);
+  };
+
+  const handleNavigateToProject = (projectId: string) => {
+    const project = PROJECTS.find(p => p.id === projectId);
+    if (project) {
+      setSelectedStory(null);
+      setTimeout(() => {
+          setSelectedProject(project);
+      }, 100); // Small delay to allow smoother transition
+    }
   };
 
   // Mosaic Pattern Logic for 4-column grid
@@ -72,6 +85,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        <StoriesSection onSelectStory={setSelectedStory} />
         <AboutSection onOpenManifesto={() => setIsManifestoOpen(true)} />
         <TourSection onOpenBooking={handleOpenBooking} />
 
@@ -79,6 +93,11 @@ const App: React.FC = () => {
 
       <Footer />
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      <StoryModal 
+        story={selectedStory} 
+        onClose={() => setSelectedStory(null)} 
+        onNavigateToProject={handleNavigateToProject}
+      />
       <ManifestoModal isOpen={isManifestoOpen} onClose={() => setIsManifestoOpen(false)} />
       <BookingModal 
         isOpen={isBookingOpen} 
