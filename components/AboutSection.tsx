@@ -71,7 +71,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onOpenManifesto }) => {
                     <img 
                         src="https://storage.googleapis.com/studiovalkenier/woutervalkenier.jpg" 
                         alt="Wouter Valkenier" 
-                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        className="w-full h-full object-cover transition-all duration-700"
                     />
                 </div>
                 <div>
@@ -89,7 +89,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onOpenManifesto }) => {
                     <img 
                         src="https://storage.googleapis.com/studiovalkenier/MijkeValkenier-01klein%20(1)_wp_1600.jpg" 
                         alt="Mijke Valkenier" 
-                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        className="w-full h-full object-cover transition-all duration-700"
                     />
                 </div>
                 <div>
