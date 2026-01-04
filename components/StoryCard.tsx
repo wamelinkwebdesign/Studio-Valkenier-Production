@@ -46,7 +46,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, onClick, index }) => {
                 </>
             )}
         </div>
-        <h3 className="text-2xl font-serif font-bold leading-tight group-hover:text-studio-red transition-colors duration-300">
+        <h3 className="text-2xl font-bold leading-tight group-hover:opacity-70 transition-opacity duration-300">
             {story.title}
         </h3>
         <span className="text-sm font-bold uppercase tracking-widest border-b border-transparent group-hover:border-black w-fit transition-all duration-300 mt-2">

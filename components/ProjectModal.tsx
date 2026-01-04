@@ -102,11 +102,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 min-h-screen">
             
             {/* --- LEFT COLUMN (Desktop Sticky Sidebar) --- */}
-            <div className="hidden md:flex md:col-span-4 h-screen sticky top-0 flex-col justify-between p-12 border-r border-black/5 bg-white z-10">
+            <div className="hidden md:flex md:col-span-4 h-screen sticky top-0 flex-col p-12 border-r border-black/5 bg-white z-10 overflow-y-auto no-scrollbar">
                 <div className="flex flex-col">
                     <button 
                         onClick={onClose} 
-                        className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-studio-red transition-colors mb-24 w-fit"
+                        className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity mb-24 w-fit"
                     >
                         <ArrowLeft size={16} />
                         Terug naar projecten
@@ -268,7 +268,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
             {/* Close Button */}
             <button 
                 onClick={(e) => { e.stopPropagation(); setCurrentMediaIndex(null); }}
-                className="absolute top-6 right-6 text-black hover:text-studio-red transition-colors z-50 p-4 hover:rotate-90 duration-300"
+                className="absolute top-6 right-6 text-black hover:opacity-60 transition-opacity z-50 p-4 hover:rotate-90 duration-300"
             >
                 <X size={40} strokeWidth={1.5} />
             </button>

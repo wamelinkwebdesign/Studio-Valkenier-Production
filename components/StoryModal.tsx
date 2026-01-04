@@ -49,6 +49,10 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
     const links: any[] = [];
     const projects: any[] = [];
     const allImgs: string[] = [];
+    
+    // Normalize string for comparison (remove special chars, lowercase)
+    const normalizeText = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normTitle = normalizeText(story.title);
 
     // Add cover image as first image in lightbox
     if (story.coverImage) {
@@ -67,12 +71,23 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
             imageBlocks.push({ ...block, globalIndex: imageCounter++ });
         } else {
             // Paragraphs, headers, quotes
+            if (block.type === 'header') {
+                const normHeader = normalizeText(block.value);
+                // Skip header if it is practically the same as the title
+                // We check if one includes the other to catch minor variations like dates appended
+                if ((normTitle.includes(normHeader) || normHeader.includes(normTitle)) && normHeader.length > 5) {
+                    continue;
+                }
+            }
             textBlocks.push(block);
         }
     }
 
     return { mediaContent: imageBlocks, textContent: textBlocks, sidebarLinks: links, sidebarProjectLinks: projects, allImages: allImgs };
   }, [story]);
+
+  // Heuristic: If text content is short (<= 5 blocks), show it in sidebar
+  const isShortStory = textContent.length > 0 && textContent.length <= 5;
 
   // Lightbox Navigation Helpers
   const nextImage = useCallback((e?: React.MouseEvent) => {
@@ -86,6 +101,57 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
     if (lightboxIndex === null) return;
     setLightboxIndex((prev) => (prev !== null ? (prev - 1 + allImages.length) % allImages.length : null));
   }, [lightboxIndex, allImages.length]);
+
+  const renderTextBlocks = (blocks: any[], isSidebar: boolean) => {
+      return blocks.map((block: any, i: number) => {
+          const variants = {
+              hidden: { y: 10, opacity: 0 },
+              visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
+          };
+
+          if (block.type === 'header') {
+              return (
+                <motion.h3 
+                    key={i}
+                    initial="hidden" 
+                    whileInView="visible" 
+                    viewport={{ once: true }} 
+                    variants={variants}
+                    className={`${isSidebar ? 'text-lg font-black uppercase tracking-tight mt-6 mb-2' : 'text-3xl md:text-5xl font-black uppercase tracking-tight mt-8'}`}
+                >
+                    {block.value}
+                </motion.h3>
+              );
+          }
+          if (block.type === 'quote') {
+              return (
+                  <motion.blockquote 
+                      key={i}
+                      initial="hidden" 
+                      whileInView="visible" 
+                      viewport={{ once: true }} 
+                      variants={variants}
+                      className={`${isSidebar ? 'text-lg italic border-l-2 border-studio-red pl-4 my-6 text-gray-800' : 'text-3xl md:text-5xl font-serif italic text-center leading-tight my-12 text-studio-black'}`}
+                  >
+                      "{block.value}"
+                  </motion.blockquote>
+              );
+          }
+          // Paragraph
+          return (
+              <motion.p 
+                  key={i}
+                  initial="hidden" 
+                  whileInView="visible" 
+                  viewport={{ once: true }} 
+                  variants={variants}
+                  className={`${isSidebar ? 'text-base leading-relaxed text-gray-700 mb-4' : 'text-xl md:text-2xl font-serif leading-relaxed text-gray-800'}`}
+              >
+                  {block.value}
+              </motion.p>
+          );
+      });
+  };
 
   if (!story) return null;
 
@@ -108,20 +174,20 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[100] bg-white flex flex-col md:flex-row"
       >
-        {/* --- LEFT SIDEBAR (Meta & Actions) --- */}
+        {/* --- LEFT SIDEBAR (Meta & Actions & Short Text) --- */}
         <motion.div 
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="w-full md:w-[35%] lg:w-[30%] h-auto md:h-full bg-white border-r border-black/5 flex flex-col z-20 overflow-y-auto no-scrollbar relative shrink-0"
         >
-             <div className="p-6 md:p-12 flex flex-col min-h-full justify-between gap-12">
+             <div className="p-6 md:p-12 flex flex-col min-h-full gap-8">
                 
                 {/* Top Nav */}
                 <div className="flex justify-between items-center">
                     <button 
                         onClick={onClose}
-                        className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-studio-red transition-colors"
+                        className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity"
                     >
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                         Terug
@@ -145,6 +211,13 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-black mb-8 break-words hyphens-auto">
                         {story.title}
                     </h1>
+
+                    {/* Short Story Content rendered in Sidebar */}
+                    {isShortStory && (
+                        <div className="mt-8 border-t border-black/5 pt-8">
+                            {renderTextBlocks(textContent, true)}
+                        </div>
+                    )}
                 </div>
 
                 {/* Sidebar Actions (Links) - Hidden on Mobile */}
@@ -264,62 +337,14 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
                 ))}
             </div>
 
-             {/* Text Content Area (Bottom) */}
-             {(textContent.length > 0 || sidebarLinks.length > 0 || sidebarProjectLinks.length > 0) && (
-                 <div className="max-w-4xl mx-auto px-6 py-16 md:px-16 md:py-24">
-                     {/* Text Blocks */}
-                     {textContent.length > 0 && (
+             {/* Text Content Area (Bottom) - Only show for long stories OR if links present */}
+             {/* Note: md:hidden added if short story to prevent empty whitespace on desktop where sidebar handles content */}
+             {((!isShortStory && textContent.length > 0) || sidebarLinks.length > 0 || sidebarProjectLinks.length > 0) && (
+                 <div className={`max-w-4xl mx-auto px-6 py-16 md:px-16 md:py-24 ${isShortStory ? 'md:hidden' : ''}`}>
+                     {/* Text Blocks - Only if NOT short story */}
+                     {!isShortStory && textContent.length > 0 && (
                          <div className="flex flex-col gap-12 mb-20">
-                            {textContent.map((block: any, i: number) => {
-                                const variants = {
-                                    hidden: { y: 30, opacity: 0 },
-                                    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
-                                };
-
-                                if (block.type === 'header') {
-                                    return (
-                                        <motion.h2 
-                                            key={i}
-                                            initial="hidden"
-                                            whileInView="visible"
-                                            viewport={{ once: true }}
-                                            variants={variants}
-                                            className="text-3xl md:text-5xl font-black uppercase tracking-tight mt-8"
-                                        >
-                                            {block.value}
-                                        </motion.h2>
-                                    )
-                                }
-
-                                if (block.type === 'quote') {
-                                     return (
-                                        <motion.blockquote 
-                                            key={i}
-                                            initial="hidden"
-                                            whileInView="visible"
-                                            viewport={{ once: true }}
-                                            variants={variants}
-                                            className="text-3xl md:text-5xl font-serif italic text-center leading-tight my-12 text-studio-black"
-                                        >
-                                            "{block.value}"
-                                        </motion.blockquote>
-                                    )
-                                }
-
-                                // Paragraph
-                                return (
-                                    <motion.p 
-                                        key={i}
-                                        initial="hidden"
-                                        whileInView="visible"
-                                        viewport={{ once: true }}
-                                        variants={variants}
-                                        className="text-xl md:text-2xl font-serif leading-relaxed text-gray-800"
-                                    >
-                                        {block.value}
-                                    </motion.p>
-                                )
-                            })}
+                            {renderTextBlocks(textContent, false)}
                          </div>
                      )}
 
@@ -386,7 +411,7 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
                     {/* Close Button */}
                     <button 
                         onClick={(e) => { e.stopPropagation(); setLightboxIndex(null); }}
-                        className="absolute top-6 right-6 text-black hover:text-studio-red transition-colors z-50 p-4 hover:rotate-90 duration-300"
+                        className="absolute top-6 right-6 text-black hover:opacity-60 transition-opacity z-50 p-4 hover:rotate-90 duration-300"
                     >
                         <X size={40} strokeWidth={1.5} />
                     </button>

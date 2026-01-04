@@ -38,24 +38,24 @@ const App: React.FC = () => {
     }
   };
 
-  // Mosaic Pattern Logic for 4-column grid
+  // Mosaic Pattern Logic for 6-column grid to achieve 2-3-2 layout
   const getMosaicClass = (index: number) => {
-    // Defines a repeating pattern for the grid items
-    // 0: Large Square (2x2)
-    // 1: Tall Vertical (1x2)
-    // 2: Small Box (1x1)
-    // 3: Small Box (1x1)
-    // 4: Wide Horizontal (2x1)
-    // 5: Wide Horizontal (2x1)
-    const patterns = [
-      "md:col-span-2 md:row-span-2", 
-      "md:col-span-1 md:row-span-2", 
-      "md:col-span-1 md:row-span-1", 
-      "md:col-span-1 md:row-span-1", 
-      "md:col-span-2 md:row-span-1", 
-      "md:col-span-2 md:row-span-1"
-    ];
-    return patterns[index % patterns.length];
+    // Pattern cycle of 7 items
+    const position = index % 7;
+
+    // Row 1: 2 items (span 3 cols each)
+    if (position === 0 || position === 1) {
+        return "md:col-span-3 md:row-span-1";
+    }
+    
+    // Row 2: 3 items (span 2 cols each)
+    if (position === 2 || position === 3 || position === 4) {
+        return "md:col-span-2 md:row-span-1";
+    }
+
+    // Row 3: 2 items (span 3 cols each)
+    // Covers indices 5 and 6
+    return "md:col-span-3 md:row-span-1";
   };
 
   return (
@@ -71,8 +71,8 @@ const App: React.FC = () => {
              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Projecten</h2>
           </div>
 
-          {/* Mosaic Grid Container */}
-          <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] md:auto-rows-[40vh] gap-1 md:gap-2">
+          {/* Mosaic Grid Container - 6 columns for 2-3-2 layout */}
+          <div className="grid grid-cols-1 md:grid-cols-6 auto-rows-[300px] md:auto-rows-[40vh] gap-1 md:gap-2">
             {PROJECTS.map((project, index) => (
               <ProjectCard 
                 key={project.id} 
@@ -86,7 +86,7 @@ const App: React.FC = () => {
         </section>
 
         <StoriesSection onSelectStory={setSelectedStory} />
-        <AboutSection onOpenManifesto={() => setIsManifestoOpen(true)} />
+        <AboutSection />
         <TourSection onOpenBooking={handleOpenBooking} />
 
       </main>

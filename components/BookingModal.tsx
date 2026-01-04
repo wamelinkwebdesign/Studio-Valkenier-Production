@@ -106,7 +106,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, initialTyp
                   </p>
                   <button 
                     onClick={onClose}
-                    className="mt-8 px-8 py-3 bg-black text-white font-bold uppercase tracking-widest text-sm hover:bg-studio-red transition-colors"
+                    className="mt-8 px-8 py-3 bg-black text-white font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors"
                   >
                     Sluiten
                   </button>

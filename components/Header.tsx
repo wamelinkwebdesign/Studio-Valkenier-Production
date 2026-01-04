@@ -83,11 +83,14 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
     },
     { 
       label: 'About', 
-      href: '#', 
+      href: '#about', 
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         setIsMobileMenuOpen(false);
-        onOpenManifesto();
+        const element = document.getElementById('about');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     },
     { 
@@ -121,8 +124,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
           href="#" 
           className="block w-20 md:w-32 mix-blend-difference z-50" 
           aria-label="Home"
-          whileHover={{ rotate: 360, scale: 1.1 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
           onClick={() => setIsMobileMenuOpen(false)}
         >
           <img 
@@ -133,7 +134,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
         </motion.a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-12">
+        <nav className="hidden md:flex items-center space-x-12">
           {navLinks.map((item) => (
             <a
               key={item.label}
@@ -145,6 +146,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
+          <a
+            href="https://www.instagram.com/studiovalkenier/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black/60 hover:text-black transition-colors duration-300 flex items-center"
+            aria-label="Instagram"
+          >
+            <Instagram size={20} />
+          </a>
         </nav>
 
         {/* Mobile Hamburger Button */}
@@ -191,10 +201,10 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
               className="flex flex-col gap-6"
             >
               <div className="flex gap-6">
-                <a href="https://www.instagram.com/studiovalkenier/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-studio-red transition-colors">
+                <a href="https://www.instagram.com/studiovalkenier/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-black/60 transition-colors">
                   <Instagram size={28} />
                 </a>
-                <a href="https://nl.pinterest.com/studiovalkenier/_saved/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-studio-red transition-colors">
+                <a href="https://nl.pinterest.com/studiovalkenier/_saved/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-black/60 transition-colors">
                   <PinterestIcon size={28} />
                 </a>
               </div>

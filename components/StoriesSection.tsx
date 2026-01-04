@@ -81,9 +81,9 @@ const StoriesSection: React.FC<StoriesSectionProps> = ({ onSelectStory }) => {
             >
                 <button
                     onClick={handleLoadMore}
-                    className="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest hover:text-studio-red transition-colors duration-300"
+                    className="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest hover:opacity-60 transition-opacity duration-300"
                 >
-                    <span className="border-b border-black group-hover:border-studio-red pb-1 transition-colors">Meer laden</span>
+                    <span className="border-b border-black group-hover:border-black/60 pb-1 transition-colors">Meer laden</span>
                     <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
                 </button>
             </motion.div>

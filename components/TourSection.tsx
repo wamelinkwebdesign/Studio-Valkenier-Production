@@ -4,10 +4,9 @@ import { ArrowUpRight, ArrowDown } from 'lucide-react';
 import { PROJECTS } from '../constants';
 
 interface ServiceColumnProps {
-  number: string;
+  number?: string;
   title: string;
   description: string;
-  ctaLabel: string;
   onClick: () => void;
   videoUrl?: string;
   className?: string;
@@ -15,14 +14,15 @@ interface ServiceColumnProps {
   pdfLabel?: string;
 }
 
-const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, ctaLabel, onClick, videoUrl, className = "", pdfUrl, pdfLabel }) => {
+const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, description, onClick, videoUrl, className = "", pdfUrl, pdfLabel }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div 
-      className={`relative flex flex-col border-t border-black pt-6 lg:border-t-0 lg:border-l lg:pl-10 transition-colors duration-500 ${className}`}
+      className={`relative flex flex-col border-t border-black pt-6 lg:border-t-0 lg:border-l lg:pl-10 transition-colors duration-500 cursor-pointer ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
     >
       {/* Background Video Layer */}
       <AnimatePresence>
@@ -50,42 +50,30 @@ const ServiceColumn: React.FC<ServiceColumnProps> = ({ number, title, descriptio
       {/* Content Layer */}
       <div className={`relative z-20 flex flex-col h-full justify-between transition-colors duration-300 ${isHovered ? 'text-white' : 'text-black'}`}>
         <div>
-           {/* Number - Always Studio Red */}
-           <span className="font-mono text-xs text-studio-red mb-6 block relative z-30">{number}</span>
+           {/* Number - Only render if provided */}
+           {number && <span className="font-mono text-xs text-studio-red mb-6 block relative z-30">{number}</span>}
            
            <h3 className={`text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 transition-colors duration-300`}>
              {title}
            </h3>
            
-           <p className={`text-lg leading-relaxed max-w-sm mb-12 transition-colors duration-300 ${isHovered ? 'text-gray-200' : 'text-gray-600'}`}>
+           <p className={`text-lg leading-relaxed max-w-sm mb-8 transition-colors duration-300 ${isHovered ? 'text-gray-200' : 'text-gray-600'}`}>
              {description}
            </p>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
-           <button 
-             onClick={onClick}
-             className={`group inline-flex items-center gap-2 text-xl md:text-2xl font-black uppercase tracking-tighter border-b-2 pb-1 transition-all duration-300 ${isHovered ? 'border-white text-white' : 'border-black text-black hover:text-studio-red hover:border-studio-red'}`}
-           >
-             {ctaLabel}
-             <ArrowUpRight className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-           </button>
 
            {pdfUrl && (
-             <>
-                {/* Separator - Hidden on mobile where they stack */}
-                <span className={`hidden md:block w-px h-6 ${isHovered ? 'bg-white/30' : 'bg-black/20'}`}></span>
-                
-                <a 
-                    href={pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`group/pdf inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 ${isHovered ? 'border-white/50 text-white/80 hover:text-white hover:border-white' : 'border-black/30 text-black/50 hover:text-black hover:border-black'}`}
-                >
-                    {pdfLabel || "Download PDF"}
-                    <ArrowDown className="w-3 h-3 group-hover/pdf:translate-y-1 transition-transform" />
-                </a>
-             </>
+                <div className="mb-4">
+                  <a 
+                      href={pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className={`group/pdf inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 ${isHovered ? 'border-white/50 text-white/80 hover:text-white hover:border-white' : 'border-black/30 text-black/50 hover:text-black hover:border-black'}`}
+                  >
+                      {pdfLabel || "Download PDF"}
+                      <ArrowDown className="w-3 h-3 group-hover/pdf:translate-y-1 transition-transform" />
+                  </a>
+                </div>
            )}
         </div>
       </div>
@@ -102,38 +90,24 @@ interface LocationBlockProps {
 }
 
 const LocationBlock: React.FC<LocationBlockProps> = ({ label, addressLines, note, image, mapQuery }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div 
-      className="relative w-full py-8 border-t border-black transition-colors duration-500 overflow-hidden group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="relative w-full py-8 border-t border-white/20 overflow-hidden group"
     >
-      {/* Background Image Layer */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="absolute inset-0 z-0"
-          >
-            <div className="absolute inset-0 bg-black/40 z-10" />
-            <img 
-              src={image} 
-              alt={label}
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Background Image Layer - Always visible */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/50 transition-colors duration-300" />
+        <img 
+          src={image} 
+          alt={label}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      </div>
 
       {/* Content */}
-      <div className={`relative z-20 transition-colors duration-300 ${isHovered ? 'text-white' : 'text-black'}`}>
+      <div className="relative z-20 text-white px-6">
           <div className="flex justify-between items-start mb-4">
-            <span className={`text-xs font-mono uppercase tracking-[0.2em] ${isHovered ? 'text-white' : 'text-gray-500'}`}>
+            <span className="text-xs font-mono uppercase tracking-[0.2em] text-white/70">
                 {label}
             </span>
           </div>
@@ -153,7 +127,7 @@ const LocationBlock: React.FC<LocationBlockProps> = ({ label, addressLines, note
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
               target="_blank" 
               rel="noopener noreferrer"
-              className={`inline-flex items-center text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 ${isHovered ? 'border-white hover:text-white hover:border-white' : 'border-black hover:text-studio-red hover:border-studio-red'}`}
+              className="inline-flex items-center text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all duration-300 border-white hover:text-white/70 hover:border-white/70"
           >
               <span>Locatie Bekijken</span>
               <ArrowUpRight className="ml-2 w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
@@ -177,7 +151,7 @@ const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
       id="contact"
       className="relative w-full py-24 md:py-32 px-6 md:px-12 bg-white text-black cursor-default"
     >
-      {/* Main Content Grid */}
+      {/* Main Content Grid - 1/3 (Contact) + 2/3 (Services) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-8 max-w-[1800px] mx-auto">
         
         {/* COLUMN 1: Headline & Address */}
@@ -186,16 +160,13 @@ const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8">
                     Contact
                 </h2>
-                <p className="text-lg md:text-xl font-medium leading-relaxed max-w-md mt-12">
-                   Wil je dieper de verhalen induiken? Elk project draagt een geschiedenis van gemeenschap, ontwerp en experiment.
-                </p>
             </div>
 
             {/* Location Blocks */}
             <div className="flex flex-col w-full mt-auto">
                 <LocationBlock 
                     label="Amsterdam Studio"
-                    addressLines={["Kastrupstraat 11G", "1043 CR Amsterdam"]}
+                    addressLines={["Kastrupstraat 11G", "1043 CR Amsterdam", "+31 20 215 7360"]}
                     image="https://storage.googleapis.com/studiovalkenier/studio.JPG"
                     mapQuery="Studio Valkenier Kastrupstraat 11G Amsterdam"
                 />
@@ -209,27 +180,30 @@ const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
             </div>
         </div>
 
-        {/* COLUMN 2: Tours */}
-        <ServiceColumn 
-            number="01"
-            title="Tours"
-            description="Studio Valkenier biedt persoonlijke rondleidingen onder leiding van initiatiefnemers, waarbij je een uniek kijkje achter de schermen krijgt: van eerste schets tot gerealiseerde plek."
-            ctaLabel="Boek een tour"
-            onClick={() => onOpenBooking('tour')}
-            videoUrl={toursVideo}
-            pdfUrl="https://storage.googleapis.com/studiovalkenier/07Informatiewaaier_90x160mmsv.pdf"
-            pdfLabel="Informatie Downloaden"
-        />
+        {/* COLUMN 2 & 3 Combined: Stacked Services (Spans 2 columns for 2/3 width) */}
+        <div className="flex flex-col h-full lg:col-span-2">
+            {/* Tours */}
+            <ServiceColumn 
+                title="Boek een tour"
+                description="Studio Valkenier biedt persoonlijke rondleidingen onder leiding van initiatiefnemers, waarbij je een uniek kijkje achter de schermen krijgt: van eerste schets tot gerealiseerde plek."
+                onClick={() => onOpenBooking('tour')}
+                videoUrl={toursVideo}
+                pdfUrl="https://storage.googleapis.com/studiovalkenier/07Informatiewaaier_90x160mmsv.pdf"
+                pdfLabel="Informatie Downloaden"
+                // On Desktop: Remove top border, add left border, add extra top padding for visual breathing room, add bottom padding
+                className="lg:border-t-0 lg:pt-12 lg:border-l lg:pl-10 lg:pb-12 flex-1"
+            />
 
-        {/* COLUMN 3: Lectures */}
-        <ServiceColumn 
-            number="02"
-            title="Lezingen"
-            description="De partners van Studio Valkenier zijn tevens ervaren keynote speakers. Voor lezingen of samenwerkingen delen zij graag hun visie op duurzaam ontwerp, circulair leven en rebelse architectuur."
-            ctaLabel="Boek een lezing"
-            onClick={() => onOpenBooking('lecture')}
-            videoUrl={lecturesVideo}
-        />
+            {/* Lectures - Stacked Below */}
+            <ServiceColumn 
+                title="Boek een lezing"
+                description="De partners van Studio Valkenier zijn tevens ervaren keynote speakers. Voor lezingen of samenwerkingen delen zij graag hun visie op duurzaam ontwerp, circulair leven en rebelse architectuur."
+                onClick={() => onOpenBooking('lecture')}
+                videoUrl={lecturesVideo}
+                // On Desktop: Keep top border (separator), add left border, add top padding for spacing
+                className="lg:border-l lg:pl-10 lg:pt-12 flex-1"
+            />
+        </div>
 
       </div>
     </section>
