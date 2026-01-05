@@ -6,20 +6,6 @@ interface HeaderProps {
   onOpenManifesto: () => void;
 }
 
-const PinterestIcon = ({ size = 28, className = "" }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
-    stroke="none"
-    className={className}
-  >
-    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.399.165-1.495-.69-2.433-2.864-2.433-4.624 0-3.761 2.737-7.229 7.892-7.229 4.144 0 7.365 2.953 7.365 6.899 0 4.115-2.595 7.431-6.199 7.431-1.211 0-2.348-.63-2.738-1.373 0 0-.599 2.287-.744 2.844-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.594.026 12.017.026" />
-  </svg>
-);
-
 const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -203,9 +189,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenManifesto }) => {
               <div className="flex gap-6">
                 <a href="https://www.instagram.com/studiovalkenier/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-black/60 transition-colors">
                   <Instagram size={28} />
-                </a>
-                <a href="https://nl.pinterest.com/studiovalkenier/_saved/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-black/60 transition-colors">
-                  <PinterestIcon size={28} />
                 </a>
               </div>
               <a href="mailto:info@studiovalkenier.nl" className="text-lg font-bold text-black uppercase tracking-tight">
