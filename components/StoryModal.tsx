@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowLeft, ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Story } from '../types';
 import { PROJECTS } from '../constants';
+import SEO from './SEO';
 
 interface StoryModalProps {
   story: Story | null;
@@ -168,6 +169,32 @@ const StoryModal: React.FC<StoryModalProps> = ({ story, onClose, onNavigateToPro
 
   return (
     <AnimatePresence>
+      <SEO 
+        title={`${story.title} - Stories`}
+        description={`Read about ${story.title} from ${story.source}.`}
+        image={story.coverImage}
+        url={`https://studiovalkenier.nl/stories/${story.id}`}
+        type="article"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": story.title,
+          "image": [story.coverImage],
+          "publisher": {
+            "@type": "Organization",
+            "name": "Studio Valkenier",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://storage.googleapis.com/studiovalkenier/logo.png"
+            }
+          },
+          "datePublished": "2023-01-01", 
+          "author": {
+              "@type": "Organization",
+              "name": story.source
+          }
+        }}
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

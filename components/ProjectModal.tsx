@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Project } from '../types';
+import SEO from './SEO';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -91,6 +92,25 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
 
   return (
     <AnimatePresence>
+      <SEO 
+        title={`${project.title} - Project`}
+        description={project.description.substring(0, 160) + "..."}
+        image={project.thumbnail}
+        url={`https://studiovalkenier.nl/work/${project.id}`}
+        type="project"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "name": project.title,
+          "creator": {
+            "@type": "Organization",
+            "name": "Studio Valkenier"
+          },
+          "description": project.description,
+          "dateCreated": project.year,
+          "keywords": `${project.role}, ${project.client}`
+        }}
+      />
       <motion.div
         key="modal-content"
         initial={{ opacity: 0 }}

@@ -11,6 +11,7 @@ import StoriesSection from './components/StoriesSection';
 import StoryModal from './components/StoryModal';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
+import SEO from './components/SEO';
 import { PROJECTS } from './constants';
 import { Project, Story } from './types';
 
@@ -60,6 +61,10 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-white min-h-screen text-black selection:bg-black selection:text-white">
+      <SEO 
+        title="Studio Valkenier - Multidisciplinair Ontwerpbureau" 
+        description="Studio Valkenier is een multidisciplinair ontwerpbureau in Amsterdam, gespecialiseerd in stedelijk ontwerp, architectuur, circulair bouwen en conceptontwikkeling." 
+      />
       <CustomCursor />
       <Header onOpenManifesto={() => setIsManifestoOpen(true)} />
       
