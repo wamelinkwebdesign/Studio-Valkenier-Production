@@ -13,7 +13,8 @@
     "react-dom": "18.3.1",
     "lucide-react": "0.344.0",
     "framer-motion": "11.0.8",
-    "react-helmet-async": "2.0.4"
+    "react-helmet-async": "2.0.4",
+    "@emailjs/browser": "4.4.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
