@@ -65,7 +65,10 @@ const AboutSection: React.FC = () => {
                 </div>
                 <div>
                     <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-1">Wouter Valkenier</h3>
-                    <span className="text-sm font-mono uppercase tracking-widest text-gray-500 block">Architect / Stedenbouwkundige / Project Booster</span>
+                    <span className="text-sm font-mono uppercase tracking-widest text-gray-500 block mb-4">Architect / Stedenbouwkundige / Project Booster</span>
+                    <a href="https://www.linkedin.com/in/woutervalkenier/" target="_blank" rel="noopener noreferrer" className="inline-block text-xs font-bold uppercase tracking-widest hover:text-gray-500 transition-colors">
+                        LinkedIn
+                    </a>
                 </div>
             </motion.div>
 
@@ -80,7 +83,10 @@ const AboutSection: React.FC = () => {
                 </div>
                 <div>
                     <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-1">Mijke de Kok</h3>
-                    <span className="text-sm font-mono uppercase tracking-widest text-gray-500 block">Architect / Stedenbouwkundige</span>
+                    <span className="text-sm font-mono uppercase tracking-widest text-gray-500 block mb-4">Architect / Stedenbouwkundige</span>
+                    <a href="https://www.linkedin.com/in/mijkedekok/" target="_blank" rel="noopener noreferrer" className="inline-block text-xs font-bold uppercase tracking-widest hover:text-gray-500 transition-colors">
+                        LinkedIn
+                    </a>
                 </div>
             </motion.div>
 
