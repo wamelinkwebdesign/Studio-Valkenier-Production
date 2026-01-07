@@ -189,7 +189,7 @@ const TourSection: React.FC<TourSectionProps> = ({ onOpenBooking }) => {
                 onClick={() => onOpenBooking('tour')}
                 videoUrl={toursVideo}
                 pdfUrl="https://storage.googleapis.com/studiovalkenier/07Informatiewaaier_90x160mmsv.pdf"
-                pdfLabel="Informatie Downloaden"
+                pdfLabel="Download onze Architecture Trail tour!"
                 // On Desktop: Remove top border, add left border, add extra top padding for visual breathing room, add bottom padding
                 className="lg:border-t-0 lg:pt-12 lg:border-l lg:pl-10 lg:pb-12 flex-1"
             />

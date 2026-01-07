@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X, ArrowRight, Check, AlertCircle } from 'lucide-react';
@@ -42,9 +43,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, initialTyp
     // -------------------------------------------------------------------------
     // CONFIGURE THESE KEYS FROM YOUR EMAILJS DASHBOARD (https://emailjs.com)
     // -------------------------------------------------------------------------
-    const SERVICE_ID = 'service_dfxoyyq';   
-    const TEMPLATE_ID = 'template_hgnjagu'; 
-    const PUBLIC_KEY = 'y1RupdFlLsjqYcwEe';   
+    // Explicitly type as string to fix TypeScript comparison error with placeholder value
+    const SERVICE_ID: string = 'service_dfxoyyq';   
+    const TEMPLATE_ID: string = 'template_hgnjagu'; 
+    const PUBLIC_KEY: string = 'y1RupdFlLsjqYcwEe';   
     // -------------------------------------------------------------------------
 
     // Validate if keys are set
