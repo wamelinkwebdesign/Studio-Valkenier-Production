@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProjectCard from './components/ProjectCard';
@@ -12,7 +12,7 @@ import StoryModal from './components/StoryModal';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import SEO from './components/SEO';
-import { PROJECTS } from './constants';
+import { PROJECTS, STORIES } from './constants';
 import { Project, Story } from './types';
 
 const App: React.FC = () => {
@@ -23,6 +23,72 @@ const App: React.FC = () => {
   // Booking Modal State
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingType, setBookingType] = useState<'tour' | 'lecture'>('tour');
+
+  // URL Routing / Deep Linking Logic
+  useEffect(() => {
+    const handlePopState = () => {
+      try {
+        const path = window.location.pathname;
+        
+        // Reset if root
+        if (path === '/' || path === '') {
+          setSelectedProject(null);
+          setSelectedStory(null);
+          return;
+        }
+
+        // Check for Projects
+        if (path.startsWith('/work/')) {
+          const id = path.split('/work/')[1];
+          const project = PROJECTS.find(p => p.id === id);
+          if (project) {
+              setSelectedProject(project);
+              setSelectedStory(null);
+          }
+        } 
+        // Check for Stories
+        else if (path.startsWith('/stories/')) {
+          const id = path.split('/stories/')[1];
+          const story = STORIES.find(s => s.id === id);
+          if (story) {
+              setSelectedStory(story);
+              setSelectedProject(null);
+          }
+        }
+      } catch (e) {
+        // Ignore errors in environments where location is restricted
+      }
+    };
+
+    // Check on initial mount
+    handlePopState();
+
+    // Listen for back/forward buttons
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update URL when modal state changes
+  useEffect(() => {
+    try {
+      if (selectedProject) {
+          if (window.location.pathname !== `/work/${selectedProject.id}`) {
+              window.history.pushState(null, '', `/work/${selectedProject.id}`);
+          }
+      } else if (selectedStory) {
+           if (window.location.pathname !== `/stories/${selectedStory.id}`) {
+              window.history.pushState(null, '', `/stories/${selectedStory.id}`);
+          }
+      } else {
+          // Only reset to root if we aren't already there (and modals are closed)
+          if (window.location.pathname !== '/' && !selectedProject && !selectedStory) {
+              window.history.pushState(null, '', '/');
+          }
+      }
+    } catch (e) {
+      // Silently fail in environments where history API is restricted (like blob/iframe previews)
+    }
+  }, [selectedProject, selectedStory]);
 
   const handleOpenBooking = (type: 'tour' | 'lecture') => {
     setBookingType(type);
