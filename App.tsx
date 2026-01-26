@@ -39,7 +39,8 @@ const App: React.FC = () => {
 
         // Check for Projects
         if (path.startsWith('/work/')) {
-          const id = path.split('/work/')[1];
+          // Remove trailing slash if present to match ID exactly
+          const id = path.split('/work/')[1].replace(/\/$/, '');
           const project = PROJECTS.find(p => p.id === id);
           if (project) {
               setSelectedProject(project);
@@ -48,7 +49,8 @@ const App: React.FC = () => {
         } 
         // Check for Stories
         else if (path.startsWith('/stories/')) {
-          const id = path.split('/stories/')[1];
+          // Remove trailing slash if present
+          const id = path.split('/stories/')[1].replace(/\/$/, '');
           const story = STORIES.find(s => s.id === id);
           if (story) {
               setSelectedStory(story);
